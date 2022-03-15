@@ -87,8 +87,38 @@ public class HuffmanCoding {
      * in huffmanRoot
      */
     public void makeTree() {
-
-	/* Your code goes here */
+        makeSortedList();
+        Queue<TreeNode> source = new Queue<TreeNode>();
+        Queue<TreeNode> target = new Queue<TreeNode>();
+        int n = sortedCharFreqList.size();
+        //Fill source
+        for(int i = 0; i < n; i++){
+            source.enqueue(new TreeNode(sortedCharFreqList.get(i), null, null));
+        }
+        TreeNode left;
+        TreeNode right;
+        double freqSum;
+        TreeNode newNode;
+        while(source.size() != 1){
+            if(target.isEmpty() || source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                left = source.dequeue();
+            }
+            else{
+                left = target.dequeue();
+            }
+            if(target.isEmpty() || source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                right = source.dequeue();
+            }
+            else{
+                right = target.dequeue();
+            }
+            freqSum = left.getData().getProbOcc() + right.getData().getProbOcc();
+            newNode = new TreeNode(new CharFreq(null, freqSum), left, right);
+            target.enqueue(newNode);
+            if(target.size() == 1 && source.size() == 1){
+                huffmanRoot = target.dequeue();
+            }
+        }
     }
 
     /**
