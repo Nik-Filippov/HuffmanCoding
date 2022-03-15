@@ -34,8 +34,37 @@ public class HuffmanCoding {
      */
     public void makeSortedList() {
         StdIn.setFile(fileName);
-
-	/* Your code goes here */
+        String str = "";
+        sortedCharFreqList = new ArrayList<>();
+        while(StdIn.hasNextLine()){
+            str = str + StdIn.readLine();
+        }
+        char[] charArr = str.toCharArray();
+        sortedCharFreqList.add(new CharFreq(charArr[0],0));
+        for(int i = 0; i < str.length(); i++){
+            boolean containsChar = false;
+            for(int j = 0; j < sortedCharFreqList.size(); j++){
+                if(sortedCharFreqList.get(j).getCharacter() == charArr[i]){
+                    containsChar = true;
+                }
+            }
+            if(!containsChar){
+                sortedCharFreqList.add(new CharFreq(charArr[i],0));
+            }
+        }
+        //Bubble Sort
+        int n = sortedCharFreqList.size();  
+        CharFreq temp;  
+        for(int i = 0; i < n; i++){  
+            for(int j = 1; j < (n-i); j++){  
+                if(sortedCharFreqList.get(j-1).compareTo(sortedCharFreqList.get(j)) > 0){  
+                    //swap elements  
+                    temp = sortedCharFreqList.get(j-1);  
+                    sortedCharFreqList.set(j-1, sortedCharFreqList.get(j));  
+                    sortedCharFreqList.set(j, temp);  
+                }  
+            }  
+        }  
     }
 
     /**
