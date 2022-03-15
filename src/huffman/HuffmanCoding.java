@@ -3,6 +3,7 @@ package huffman;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -52,20 +53,34 @@ public class HuffmanCoding {
                 sortedCharFreqList.add(new CharFreq(charArr[i],0));
             }
         }
-        //Bubble Sort
+        //Add frequencies  
         int n = sortedCharFreqList.size();  
-        CharFreq temp;  
-        for(int i = 0; i < n; i++){  
-            for(int j = 1; j < (n-i); j++){  
-                if(sortedCharFreqList.get(j-1).compareTo(sortedCharFreqList.get(j)) > 0){  
-                    //swap elements  
-                    temp = sortedCharFreqList.get(j-1);  
-                    sortedCharFreqList.set(j-1, sortedCharFreqList.get(j));  
-                    sortedCharFreqList.set(j, temp);  
-                }  
-            }  
-        }  
-    }
+        double numElements = charArr.length;
+        for(int i = 0; i < n; i++){
+            char cur = sortedCharFreqList.get(i).getCharacter();
+            double occ = 0;
+            for(int j = 0; j < numElements; j++){
+                if(cur == charArr[j]){
+                    occ++;
+                }
+            }
+            sortedCharFreqList.get(i).setProbOcc(occ / numElements);
+        }
+        //Check if only one character present in ArrayList
+        if(sortedCharFreqList.size() == 1){
+            char curChar = sortedCharFreqList.get(0).getCharacter();
+            char genChar = curChar;
+            if(sortedCharFreqList.get(0).getCharacter() != 127){
+                genChar = (char)(Character.getNumericValue(curChar) + 1);
+            }
+            else{
+                genChar = (char)(0);
+            }
+            sortedCharFreqList.add(new CharFreq(genChar, 0));
+        }
+        //Sort
+        Collections.sort(sortedCharFreqList);
+    }   
 
     /**
      * Uses sortedCharFreqList to build a huffman coding tree, and stores its root
