@@ -3,7 +3,7 @@ package huffman;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.security.GeneralSecurityException;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -87,7 +87,6 @@ public class HuffmanCoding {
      * in huffmanRoot
      */
     public void makeTree() {
-        makeSortedList();
         Queue<TreeNode> source = new Queue<TreeNode>();
         Queue<TreeNode> target = new Queue<TreeNode>();
         int n = sortedCharFreqList.size();
@@ -142,8 +141,51 @@ public class HuffmanCoding {
      * Set encodings to this array.
      */
     public void makeEncodings() {
+        encodings = new String[128];
+        for(int i = 0; i < encodings.length; i++){
+            for(int j = 0; j < sortedCharFreqList.size(); j++){
+                if(i == (int) sortedCharFreqList.get(j).getCharacter()){
+                    encodings[i] = getCodes(sortedCharFreqList.get(j).getProbOcc()).get(0);
+                }
+            }
+        }
+        /*
+        for(int i = 0; i < encodings.length; i++){
+            for(int j = 0; j < sortedCharFreqList.size(); j++){
+                if(i == (int) sortedCharFreqList.get(j).getCharacter()){
+                    TreeNode ptr = huffmanRoot;
+                    String code = "";
+                    while(ptr.getData().getCharacter() != sortedCharFreqList.get(j).getCharacter()){
+                        if(sortedCharFreqList.get(j).getProbOcc() >= ptr.getData().getProbOcc() / 2){
+                            ptr = ptr.getLeft(); 
+                            code += "0";
+                        }
+                        else{
+                            ptr = ptr.getRight();
+                            code += "1";
+                        }
+                    }
+                    encodings[i] = code;
+                }
+            }
+        }*/
+    }
 
-	/* Your code goes here */
+    private ArrayList<String> getCodes(double target) {
+        ArrayList<String> code = new ArrayList<String>();
+        if (huffmanRoot == null) return null;
+        traverse(code, huffmanRoot.getLeft(), "0", target);
+        traverse(code, huffmanRoot.getRight(), "1", target);
+        return code;
+    }
+
+    private void traverse(ArrayList<String> code, TreeNode node, String prefix, double target) {
+        // base case
+        if(node==null) return;
+        if(node.getData().getProbOcc() == target && node.getData().getCharacter() != null) code.add(prefix);
+        //else traverse the left then right
+        if(node!=null){traverse(code, node.getLeft(), prefix + "0", target);}
+        if(node!=null){traverse(code, node.getRight(), prefix + "1", target);}
     }
 
     /**
