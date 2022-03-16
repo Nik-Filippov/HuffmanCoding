@@ -99,26 +99,40 @@ public class HuffmanCoding {
         TreeNode right;
         double freqSum;
         TreeNode newNode;
-        while(source.size() != 1){
-            if(target.isEmpty() || source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+        while(source.size() != 0){
+            if(source.isEmpty()){
+                left = target.dequeue();
+            }
+            else if(target.isEmpty()){
                 left = source.dequeue();
             }
             else{
-                left = target.dequeue();
+                if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                    left = source.dequeue();
+                }
+                else{
+                    left = target.dequeue();
+                }
             }
-            if(target.isEmpty() || source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+            if(source.isEmpty()){
+                right = target.dequeue();
+            }
+            else if(target.isEmpty()){
                 right = source.dequeue();
             }
             else{
-                right = target.dequeue();
+                if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                    right = source.dequeue();
+                }
+                else{
+                    right = target.dequeue();
+                }
             }
             freqSum = left.getData().getProbOcc() + right.getData().getProbOcc();
             newNode = new TreeNode(new CharFreq(null, freqSum), left, right);
             target.enqueue(newNode);
-            if(target.size() == 1 && source.size() == 1){
-                huffmanRoot = target.dequeue();
-            }
         }
+        huffmanRoot = target.dequeue();
     }
 
     /**
