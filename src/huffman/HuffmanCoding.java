@@ -149,26 +149,6 @@ public class HuffmanCoding {
                 }
             }
         }
-        /*
-        for(int i = 0; i < encodings.length; i++){
-            for(int j = 0; j < sortedCharFreqList.size(); j++){
-                if(i == (int) sortedCharFreqList.get(j).getCharacter()){
-                    TreeNode ptr = huffmanRoot;
-                    String code = "";
-                    while(ptr.getData().getCharacter() != sortedCharFreqList.get(j).getCharacter()){
-                        if(sortedCharFreqList.get(j).getProbOcc() >= ptr.getData().getProbOcc() / 2){
-                            ptr = ptr.getLeft(); 
-                            code += "0";
-                        }
-                        else{
-                            ptr = ptr.getRight();
-                            code += "1";
-                        }
-                    }
-                    encodings[i] = code;
-                }
-            }
-        }*/
     }
 
     private ArrayList<String> getCodes(double target) {
@@ -196,8 +176,23 @@ public class HuffmanCoding {
      */
     public void encode(String encodedFile) {
         StdIn.setFile(fileName);
-
-	/* Your code goes here */
+        ArrayList in = new ArrayList<>(); 
+        while(StdIn.hasNextChar()){
+            in.add(StdIn.readChar());
+        }
+        for(int i = 0; i < in.size(); i++){
+            for(int j = 0; j < encodings.length; j++){
+                if((int) (char) in.get(i) == j){
+                    in.set(i, encodings[j]);
+                    break;
+                }
+            }
+        }
+        String out = "";
+        for(int i = 0; i < in.size(); i++){
+            out += in.get(i);
+        }
+        writeBitString(encodedFile, out);
     }
     
     /**
@@ -261,8 +256,24 @@ public class HuffmanCoding {
      */
     public void decode(String encodedFile, String decodedFile) {
         StdOut.setFile(decodedFile);
-
-	/* Your code goes here */
+        //Convert encoded to letters
+        String encoded = readBitString(encodedFile);
+        String decoded = "";
+        TreeNode ptr = huffmanRoot;
+        char[] encChar = encoded.toCharArray();
+        for(int i = 0; i < encChar.length; i++){
+            if(encChar[i] == '0'){
+                ptr = ptr.getLeft();
+            }
+            else{
+                ptr = ptr.getRight();
+            }
+            if(ptr.getData().getCharacter() != null){
+                decoded += Character.toString(ptr.getData().getCharacter());
+                ptr = huffmanRoot;
+            }
+        }
+        StdOut.print(decoded);
     }
 
     /**
