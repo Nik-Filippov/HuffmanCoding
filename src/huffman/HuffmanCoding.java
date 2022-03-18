@@ -37,8 +37,8 @@ public class HuffmanCoding {
         StdIn.setFile(fileName);
         String str = "";
         sortedCharFreqList = new ArrayList<>();
-        while(StdIn.hasNextLine()){
-            str = str + StdIn.readLine();
+        while(StdIn.hasNextChar()){
+            str = str + StdIn.readChar();
         }
         char[] charArr = str.toCharArray();
         sortedCharFreqList.add(new CharFreq(charArr[0],0));
@@ -99,7 +99,7 @@ public class HuffmanCoding {
         double freqSum;
         TreeNode newNode;
         int counter = 0;
-        while(true){
+        while(!source.isEmpty() || target.size() != 1){
             if(source.isEmpty()){
                 left = target.dequeue();
             }
@@ -131,11 +131,8 @@ public class HuffmanCoding {
             freqSum = left.getData().getProbOcc() + right.getData().getProbOcc();
             newNode = new TreeNode(new CharFreq(null, freqSum), left, right);
             target.enqueue(newNode);
-            if(target.size() == 1 && source.size() == 0){
-                huffmanRoot = target.peek();
-                break;
-            }
         }
+        huffmanRoot = target.peek();
     }
 
     /**
@@ -149,13 +146,14 @@ public class HuffmanCoding {
         for(int i = 0; i < encodings.length; i++){
             for(int j = 0; j < sortedCharFreqList.size(); j++){
                 if(i == (int) sortedCharFreqList.get(j).getCharacter()){
-                    encodings[i] = getCodes(sortedCharFreqList.get(j).getProbOcc()).get(0);
+                    ArrayList options = getCodes(sortedCharFreqList.get(j).getCharacter());
+                    encodings[i] = options.get(0).toString();
                 }
             }
         }
     }
 
-    private ArrayList<String> getCodes(double target) {
+    private ArrayList<String> getCodes(char target) {
         ArrayList<String> code = new ArrayList<String>();
         if (huffmanRoot == null) return null;
         traverse(code, huffmanRoot.getLeft(), "0", target);
@@ -166,7 +164,7 @@ public class HuffmanCoding {
     private void traverse(ArrayList<String> code, TreeNode node, String prefix, double target) {
         // base case
         if(node==null) return;
-        if(node.getData().getProbOcc() == target && node.getData().getCharacter() != null) code.add(prefix);
+        if(node.getData().getCharacter() != null && node.getData().getCharacter() == target) code.add(prefix);
         //else traverse the left then right
         if(node!=null){traverse(code, node.getLeft(), prefix + "0", target);}
         if(node!=null){traverse(code, node.getRight(), prefix + "1", target);}
@@ -274,11 +272,10 @@ public class HuffmanCoding {
                 ptr = ptr.getRight();
             }
             if(ptr.getData().getCharacter() != null){
-                decoded += Character.toString(ptr.getData().getCharacter());
+                StdOut.print(ptr.getData().getCharacter());
                 ptr = huffmanRoot;
             }
         }
-        StdOut.print(decoded);
     }
 
     /**
