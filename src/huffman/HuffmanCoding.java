@@ -70,8 +70,9 @@ public class HuffmanCoding {
         if(sortedCharFreqList.size() == 1){
             char curChar = sortedCharFreqList.get(0).getCharacter();
             char genChar = curChar;
-            if(sortedCharFreqList.get(0).getCharacter() != 127){
-                genChar = (char)(Character.getNumericValue(curChar) + 1);
+            if((int) sortedCharFreqList.get(0).getCharacter() != 127){
+                int numVal = (int)curChar;
+                genChar = (char)(numVal + 1);
             }
             else{
                 genChar = (char)(0);
