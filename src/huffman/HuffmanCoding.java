@@ -98,7 +98,8 @@ public class HuffmanCoding {
         TreeNode right;
         double freqSum;
         TreeNode newNode;
-        while(source.size() != 0){
+        int counter = 0;
+        while(true){
             if(source.isEmpty()){
                 left = target.dequeue();
             }
@@ -130,8 +131,11 @@ public class HuffmanCoding {
             freqSum = left.getData().getProbOcc() + right.getData().getProbOcc();
             newNode = new TreeNode(new CharFreq(null, freqSum), left, right);
             target.enqueue(newNode);
+            if(target.size() == 1 && source.size() == 0){
+                huffmanRoot = target.peek();
+                break;
+            }
         }
-        huffmanRoot = target.dequeue();
     }
 
     /**
@@ -190,7 +194,8 @@ public class HuffmanCoding {
         }
         String out = "";
         for(int i = 0; i < in.size(); i++){
-            out += in.get(i);
+            if(in.get(i) != null)
+                out += in.get(i);
         }
         writeBitString(encodedFile, out);
     }
